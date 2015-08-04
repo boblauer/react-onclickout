@@ -1,0 +1,35 @@
+{
+  "name": "react-onclickout",
+  "version": "1.0.0",
+  "description": "An onClickOutside React component",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/babel src/index.jsx --out-file index.js",
+    "test": "npm run build && mocha --compilers .jsx:test/compiler.js test/*.jsx",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boblauer/react-onclickout.git"
+  },
+  "keywords": [
+    "react",
+    "onclick",
+    "onclickout",
+    "onclickoutside"
+  ],
+  "author": "Bob Lauer <rlauer@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/boblauer/react-onclickout/issues"
+  },
+  "homepage": "https://github.com/boblauer/react-onclickout#readme",
+  "peerDependencies": {
+    "react": ">=0.12"
+  },
+  "devDependencies": {
+    "babel": "^5.8.20",
+    "jsdom": "^3.1.2",
+    "mocha": "^2.2.5"
+  }
+}
