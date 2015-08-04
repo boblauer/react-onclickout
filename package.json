@@ -1,7 +1,7 @@
 {
   "name": "react-onclickout",
-  "version": "1.0.0",
-  "description": "An onClickOutside React component",
+  "version": "1.0.1",
+  "description": "An ES6-friendly on-click-outside React component.",
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src/index.jsx --out-file index.js",
