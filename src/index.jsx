@@ -11,7 +11,7 @@ class ClickOutComponent extends React.Component {
   componentDidMount() {
     var self = this;
 
-    window.addEventListener('click', function(e) {
+    self.__windowListener = function(e) {
       if (e.__isClickIn) return;
 
       var clickOutHandler = self.onClickOut || self.props.onClickOut;
@@ -20,11 +20,19 @@ class ClickOutComponent extends React.Component {
       }
 
       clickOutHandler.call(self, e);
-    });
+    };
 
-    React.findDOMNode(this).addEventListener('click', function(e) {
+    self.__elementListener = function(e) {
       e.__isClickIn = true;
-    });
+    };
+
+    window.addEventListener('click', self.__windowListener);
+    React.findDOMNode(this).addEventListener('click', self.__elementListener);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('click', this.__windowListener);
+    React.findDOMNode(this).removeEventListener('click', this.__elementListener);
   }
 
   render() {

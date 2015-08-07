@@ -24,7 +24,7 @@ var ClickOutComponent = (function (_React$Component) {
     value: function componentDidMount() {
       var self = this;
 
-      window.addEventListener('click', function (e) {
+      self.__windowListener = function (e) {
         if (e.__isClickIn) return;
 
         var clickOutHandler = self.onClickOut || self.props.onClickOut;
@@ -33,11 +33,20 @@ var ClickOutComponent = (function (_React$Component) {
         }
 
         clickOutHandler.call(self, e);
-      });
+      };
 
-      React.findDOMNode(this).addEventListener('click', function (e) {
+      self.__elementListener = function (e) {
         e.__isClickIn = true;
-      });
+      };
+
+      window.addEventListener('click', self.__windowListener);
+      React.findDOMNode(this).addEventListener('click', self.__elementListener);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('click', this.__windowListener);
+      React.findDOMNode(this).removeEventListener('click', this.__elementListener);
     }
   }, {
     key: 'render',
