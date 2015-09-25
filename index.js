@@ -51,11 +51,7 @@ var ClickOutComponent = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      return React.createElement(
-        'div',
-        null,
-        this.props.children
-      );
+      return React.Children.only(this.props.children);
     }
   }]);
 
