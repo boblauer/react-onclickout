@@ -36,7 +36,9 @@ class ClickOutComponent extends React.Component {
   }
 
   render() {
-    return React.Children.only(this.props.children);
+    return Array.isArray(this.props.children) ?
+      <div>{this.props.children}</div> :
+      React.Children.only(this.props.children);
   }
 }
 
