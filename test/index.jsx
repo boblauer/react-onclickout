@@ -41,6 +41,23 @@ describe('ClickOutWrapper', function () {
     testClicks();
   })
 
+  it('works with multiple instances at once', function() {
+    React.render(
+      <div>
+        <ClickOutWrapper onClickOut={incrementClickedOutCount}>
+          <span className='click-in'>Click in!</span>
+        </ClickOutWrapper>
+        <ClickOutWrapper onClickOut={incrementClickedOutCount}>
+          <span className='click-in-2'>Click in!</span>
+        </ClickOutWrapper>
+      </div>, document.body
+    );
+
+    appendClickOutArea(document.body);
+
+    testMultipleInstanceClicks();
+  });
+
   it('cleans up handlers as a wrapper component', function() {
     React.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
