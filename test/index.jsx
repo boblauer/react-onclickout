@@ -28,6 +28,19 @@ describe('ClickOutWrapper', function () {
     testClicks();
   });
 
+  it('works as a wrapper component with multiple children', function() {
+    React.render(
+      <ClickOutWrapper onClickOut={incrementClickedOutCount}>
+        <span className='click-in'>Click in!</span>
+        <span className='click-in-2'>Click in!</span>
+      </ClickOutWrapper>, document.body
+    );
+
+    appendClickOutArea(document.body);
+
+    testClicks();
+  })
+
   it('cleans up handlers as a wrapper component', function() {
     React.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
