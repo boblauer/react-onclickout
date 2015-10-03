@@ -18,9 +18,10 @@ describe('ClickOutWrapper', function () {
 
   it('works as a wrapper component', function() {
     React.render(
-    <ClickOutWrapper onClickOut={incrementClickedOutCount}>
-      <span className='click-in'>Click in!</span>
-    </ClickOutWrapper>, document.body);
+      <ClickOutWrapper onClickOut={incrementClickedOutCount}>
+        <span className='click-in'>Click in!</span>
+      </ClickOutWrapper>, document.body
+    );
 
     appendClickOutArea(document.body);
 
@@ -99,6 +100,23 @@ function testClicks() {
 
   simulateClick(clickOut);
   assert.equal(clickedOutCount, prevCount + 1);
+}
+
+function testMultipleInstanceClicks() {
+  var clickIn1  = document.querySelector('.click-in')
+    , clickIn2  = document.querySelector('.click-in-2')
+    , clickOut  = document.querySelector('.click-out')
+    , prevCount = clickedOutCount
+    ;
+
+  simulateClick(clickIn1);
+  assert.equal(clickedOutCount, prevCount + 1);
+
+  simulateClick(clickIn2);
+  assert.equal(clickedOutCount, prevCount + 2);
+
+  simulateClick(clickOut);
+  assert.equal(clickedOutCount, prevCount + 4);
 }
 
 function testUnmountedClicks() {
