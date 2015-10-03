@@ -9,10 +9,13 @@ class ClickOutComponent extends React.Component {
   }
 
   componentDidMount() {
-    var self = this;
+    let self    = this
+      , el      = React.findDOMNode(this)
+      , reactId = el.getAttribute('data-reactid')
+      ;
 
     self.__windowListener = function(e) {
-      if (e.__isClickIn) return;
+      if (e.__isClickIn === reactId) return;
 
       var clickOutHandler = self.onClickOut || self.props.onClickOut;
       if (!clickOutHandler) {
@@ -23,11 +26,11 @@ class ClickOutComponent extends React.Component {
     };
 
     self.__elementListener = function(e) {
-      e.__isClickIn = true;
+      e.__isClickIn = reactId;
     };
 
     window.addEventListener('click', self.__windowListener);
-    React.findDOMNode(this).addEventListener('click', self.__elementListener);
+    el.addEventListener('click', self.__elementListener);
   }
 
   componentWillUnmount() {

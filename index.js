@@ -22,10 +22,12 @@ var ClickOutComponent = (function (_React$Component) {
   _createClass(ClickOutComponent, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var self = this;
+      var self = this,
+          el = React.findDOMNode(this),
+          reactId = el.getAttribute('data-reactid');
 
       self.__windowListener = function (e) {
-        if (e.__isClickIn) return;
+        if (e.__isClickIn === reactId) return;
 
         var clickOutHandler = self.onClickOut || self.props.onClickOut;
         if (!clickOutHandler) {
@@ -36,11 +38,11 @@ var ClickOutComponent = (function (_React$Component) {
       };
 
       self.__elementListener = function (e) {
-        e.__isClickIn = true;
+        e.__isClickIn = reactId;
       };
 
       window.addEventListener('click', self.__windowListener);
-      React.findDOMNode(this).addEventListener('click', self.__elementListener);
+      el.addEventListener('click', self.__elementListener);
     }
   }, {
     key: 'componentWillUnmount',
@@ -51,7 +53,11 @@ var ClickOutComponent = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      return React.Children.only(this.props.children);
+      return Array.isArray(this.props.children) ? React.createElement(
+        'div',
+        null,
+        this.props.children
+      ) : React.Children.only(this.props.children);
     }
   }]);
 
