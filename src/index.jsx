@@ -1,6 +1,7 @@
 'use strict';
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 
 class ClickOutComponent extends React.Component {
 
@@ -10,7 +11,7 @@ class ClickOutComponent extends React.Component {
 
   componentDidMount() {
     let self    = this
-      , el      = React.findDOMNode(this)
+      , el      = ReactDOM.findDOMNode(this)
       , reactId = el.getAttribute('data-reactid')
       ;
 
@@ -35,7 +36,7 @@ class ClickOutComponent extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('click', this.__windowListener);
-    React.findDOMNode(this).removeEventListener('click', this.__elementListener);
+    ReactDOM.findDOMNode(this).removeEventListener('click', this.__elementListener);
   }
 
   render() {
