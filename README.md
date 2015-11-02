@@ -10,6 +10,10 @@ This component was created specifically to support ES6-style React components.  
 npm install react-onclickout --save
 ```
 
+## React Version Support
+
+For React `0.14` or later, use version `2.x` of this package.  For React `0.13` or earlier, use version `1.x` of this package.
+
 ## Usage
 
 There are two ways to use this component.
