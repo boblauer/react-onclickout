@@ -11,20 +11,23 @@ function incrementClickedOutCount() {
 }
 
 describe('ClickOutWrapper', function () {
+  var container;
+
   beforeEach(function () {
     clickedOutCount = 0;
-    global.document = jsdom.jsdom('<html><body></body></html>');
+    global.document = jsdom.jsdom('<html><body><div id="container"></div></body></html>');
     global.window = document.parentWindow;
+    container = global.document.querySelector('#container');
   });
 
   it('works as a wrapper component', function() {
     ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
-      </ClickOutWrapper>, document.body
+      </ClickOutWrapper>, container
     );
 
-    appendClickOutArea(document.body);
+    appendClickOutArea(container);
 
     testClicks();
   });
@@ -34,10 +37,10 @@ describe('ClickOutWrapper', function () {
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
         <span className='click-in-2'>Click in!</span>
-      </ClickOutWrapper>, document.body
+      </ClickOutWrapper>, container
     );
 
-    appendClickOutArea(document.body);
+    appendClickOutArea(container);
 
     testClicks();
   })
@@ -51,10 +54,10 @@ describe('ClickOutWrapper', function () {
         <ClickOutWrapper onClickOut={incrementClickedOutCount}>
           <span className='click-in-2'>Click in!</span>
         </ClickOutWrapper>
-      </div>, document.body
+      </div>, container
     );
 
-    appendClickOutArea(document.body);
+    appendClickOutArea(container);
 
     testMultipleInstanceClicks();
   });
@@ -63,17 +66,17 @@ describe('ClickOutWrapper', function () {
     ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
-      </ClickOutWrapper>, document.body
+      </ClickOutWrapper>, container
     );
 
-    appendClickOutArea(document.body);
+    appendClickOutArea(container);
 
     testClicks();
 
-    var unmounted = ReactDOM.unmountComponentAtNode(document.body);
+    var unmounted = ReactDOM.unmountComponentAtNode(container);
     assert.equal(unmounted, true);
 
-    appendClickOutArea(document.body);
+    appendClickOutArea(container);
 
     testUnmountedClicks();
   });
@@ -89,8 +92,8 @@ describe('ClickOutWrapper', function () {
       }
     }
 
-    ReactDOM.render(React.createElement(Component), document.body);
-    appendClickOutArea(document.body);
+    ReactDOM.render(React.createElement(Component), container);
+    appendClickOutArea(container);
 
     testClicks();
   });
@@ -106,15 +109,15 @@ describe('ClickOutWrapper', function () {
       }
     }
 
-    ReactDOM.render(React.createElement(Component), document.body);
-    appendClickOutArea(document.body);
+    ReactDOM.render(React.createElement(Component), container);
+    appendClickOutArea(container);
 
     testClicks();
 
-    var unmounted = ReactDOM.unmountComponentAtNode(document.body);
+    var unmounted = ReactDOM.unmountComponentAtNode(container);
     assert.equal(unmounted, true);
 
-    appendClickOutArea(document.body);
+    appendClickOutArea(container);
 
     testUnmountedClicks();
   });
