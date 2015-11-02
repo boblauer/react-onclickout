@@ -9,6 +9,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var ClickOutComponent = (function (_React$Component) {
   _inherits(ClickOutComponent, _React$Component);
@@ -23,7 +24,7 @@ var ClickOutComponent = (function (_React$Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       var self = this,
-          el = React.findDOMNode(this),
+          el = ReactDOM.findDOMNode(this),
           reactId = el.getAttribute('data-reactid');
 
       self.__windowListener = function (e) {
@@ -48,7 +49,7 @@ var ClickOutComponent = (function (_React$Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       window.removeEventListener('click', this.__windowListener);
-      React.findDOMNode(this).removeEventListener('click', this.__elementListener);
+      ReactDOM.findDOMNode(this).removeEventListener('click', this.__elementListener);
     }
   }, {
     key: 'render',

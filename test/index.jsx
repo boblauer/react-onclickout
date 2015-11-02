@@ -1,6 +1,7 @@
 var assert          = require('assert')
   , jsdom           = require('jsdom')
   , React           = require('react')
+  , ReactDOM        = require('react-dom')
   , ClickOutWrapper = require('../index.js')
   , clickedOutCount = 0
   ;
@@ -17,7 +18,7 @@ describe('ClickOutWrapper', function () {
   });
 
   it('works as a wrapper component', function() {
-    React.render(
+    ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
       </ClickOutWrapper>, document.body
@@ -29,7 +30,7 @@ describe('ClickOutWrapper', function () {
   });
 
   it('works as a wrapper component with multiple children', function() {
-    React.render(
+    ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
         <span className='click-in-2'>Click in!</span>
@@ -42,7 +43,7 @@ describe('ClickOutWrapper', function () {
   })
 
   it('works with multiple instances at once', function() {
-    React.render(
+    ReactDOM.render(
       <div>
         <ClickOutWrapper onClickOut={incrementClickedOutCount}>
           <span className='click-in'>Click in!</span>
@@ -59,7 +60,7 @@ describe('ClickOutWrapper', function () {
   });
 
   it('cleans up handlers as a wrapper component', function() {
-    React.render(
+    ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
       </ClickOutWrapper>, document.body
@@ -69,7 +70,7 @@ describe('ClickOutWrapper', function () {
 
     testClicks();
 
-    var unmounted = React.unmountComponentAtNode(document.body);
+    var unmounted = ReactDOM.unmountComponentAtNode(document.body);
     assert.equal(unmounted, true);
 
     appendClickOutArea(document.body);
@@ -88,7 +89,7 @@ describe('ClickOutWrapper', function () {
       }
     }
 
-    React.render(React.createElement(Component), document.body);
+    ReactDOM.render(React.createElement(Component), document.body);
     appendClickOutArea(document.body);
 
     testClicks();
@@ -105,12 +106,12 @@ describe('ClickOutWrapper', function () {
       }
     }
 
-    React.render(React.createElement(Component), document.body);
+    ReactDOM.render(React.createElement(Component), document.body);
     appendClickOutArea(document.body);
 
     testClicks();
 
-    var unmounted = React.unmountComponentAtNode(document.body);
+    var unmounted = ReactDOM.unmountComponentAtNode(document.body);
     assert.equal(unmounted, true);
 
     appendClickOutArea(document.body);

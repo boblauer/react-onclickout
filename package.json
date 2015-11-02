@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/boblauer/react-onclickout#readme",
   "peerDependencies": {
-    "react": ">=0.12"
+    "react": ">=0.14",
+    "react-dom": ">=0.14"
   },
   "devDependencies": {
     "babel": "^5.8.20",
