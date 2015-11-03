@@ -25,9 +25,16 @@ var ClickOutComponent = (function (_React$Component) {
     value: function componentDidMount() {
       var self = this,
           el = ReactDOM.findDOMNode(this),
-          reactId = el.getAttribute('data-reactid');
+          reactId = el.getAttribute('data-reactid'),
+          listenOnWindow = false;
+      ;
+
+      setTimeout(function () {
+        listenOnWindow = true;
+      }, 0);
 
       self.__windowListener = function (e) {
+        if (!listenOnWindow) return;
         if (e.__isClickIn === reactId) return;
 
         var clickOutHandler = self.onClickOut || self.props.onClickOut;
