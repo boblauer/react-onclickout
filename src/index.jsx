@@ -30,8 +30,12 @@ class ClickOutComponent extends React.Component {
       e.__isClickIn = reactId;
     };
 
-    window.addEventListener('click', self.__windowListener);
-    el.addEventListener('click', self.__elementListener);
+    // Delay adding click handlers to prevent being triggered by the click that 
+    // caused it to be mounted in the first place.
+    setTimeout(function() {
+      window.addEventListener('click', self.__windowListener);
+      el.addEventListener('click', self.__elementListener);
+    }, 0);
   }
 
   componentWillUnmount() {
