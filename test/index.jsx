@@ -20,19 +20,21 @@ describe('ClickOutWrapper', function () {
     container = global.document.querySelector('#container');
   });
 
-  it('works as a wrapper component', function() {
+  it('works as a wrapper component', function(done) {
     ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
       </ClickOutWrapper>, container
     );
 
-    appendClickOutArea(container);
-
-    testClicks();
+    setTimeout(function() {
+      appendClickOutArea(container);
+      testClicks();
+      done();
+    }, 0);
   });
 
-  it('works as a wrapper component with multiple children', function() {
+  it('works as a wrapper component with multiple children', function(done) {
     ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
@@ -40,12 +42,15 @@ describe('ClickOutWrapper', function () {
       </ClickOutWrapper>, container
     );
 
-    appendClickOutArea(container);
+    setTimeout(function() {
+      appendClickOutArea(container);
 
-    testClicks();
+      testClicks();
+      done();
+    }, 0);
   })
 
-  it('works with multiple instances at once', function() {
+  it('works with multiple instances at once', function(done) {
     ReactDOM.render(
       <div>
         <ClickOutWrapper onClickOut={incrementClickedOutCount}>
@@ -57,31 +62,37 @@ describe('ClickOutWrapper', function () {
       </div>, container
     );
 
-    appendClickOutArea(container);
+    setTimeout(function() {
+      appendClickOutArea(container);
 
-    testMultipleInstanceClicks();
+      testMultipleInstanceClicks();
+      done();
+    }, 0);
   });
 
-  it('cleans up handlers as a wrapper component', function() {
+  it('cleans up handlers as a wrapper component', function(done) {
     ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
       </ClickOutWrapper>, container
     );
 
-    appendClickOutArea(container);
+    setTimeout(function() {
+      appendClickOutArea(container);
 
-    testClicks();
+      testClicks();
 
-    var unmounted = ReactDOM.unmountComponentAtNode(container);
-    assert.equal(unmounted, true);
+      var unmounted = ReactDOM.unmountComponentAtNode(container);
+      assert.equal(unmounted, true);
 
-    appendClickOutArea(container);
+      appendClickOutArea(container);
 
-    testUnmountedClicks();
+      testUnmountedClicks();
+      done();
+    }, 0);
   });
 
-  it('works as a base class', function() {
+  it('works as a base class', function(done) {
     class Component extends ClickOutWrapper {
       onClickOut() {
         incrementClickedOutCount();
@@ -93,12 +104,16 @@ describe('ClickOutWrapper', function () {
     }
 
     ReactDOM.render(React.createElement(Component), container);
-    appendClickOutArea(container);
 
-    testClicks();
+    setTimeout(function() {
+      appendClickOutArea(container);
+
+      testClicks();
+      done();
+    }, 0);
   });
 
-  it('cleans up as a base component', function() {
+  it('cleans up as a base component', function(done) {
     class Component extends ClickOutWrapper {
       onClickOut() {
         incrementClickedOutCount();
@@ -110,16 +125,20 @@ describe('ClickOutWrapper', function () {
     }
 
     ReactDOM.render(React.createElement(Component), container);
-    appendClickOutArea(container);
 
-    testClicks();
+    setTimeout(function() {
+      appendClickOutArea(container);
 
-    var unmounted = ReactDOM.unmountComponentAtNode(container);
-    assert.equal(unmounted, true);
+      testClicks();
 
-    appendClickOutArea(container);
+      var unmounted = ReactDOM.unmountComponentAtNode(container);
+      assert.equal(unmounted, true);
 
-    testUnmountedClicks();
+      appendClickOutArea(container);
+
+      testUnmountedClicks();
+      done();
+    }, 0);
   });
 });
 
