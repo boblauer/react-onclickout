@@ -10,19 +10,13 @@ class ClickOutComponent extends React.Component {
   }
 
   componentDidMount() {
-    let self           = this
-      , el             = ReactDOM.findDOMNode(this)
-      , reactId        = el.getAttribute('data-reactid')
-      , listenOnWindow = false;
+    let self    = this
+      , el      = ReactDOM.findDOMNode(this)
+      , reactId = el.getAttribute('data-reactid')
       ;
 
-    setTimeout(function() {
-      listenOnWindow = true;
-    }, 0);
-
     self.__windowListener = function(e) {
-      if (!listenOnWindow) return;
-      if (e.__isClickIn === reactId) return;
+      if (e.__clickInElReactId === reactId) return;
 
       var clickOutHandler = self.onClickOut || self.props.onClickOut;
       if (!clickOutHandler) {
@@ -33,11 +27,13 @@ class ClickOutComponent extends React.Component {
     };
 
     self.__elementListener = function(e) {
-      e.__isClickIn = reactId;
+      e.__clickInElReactId = reactId;
     };
 
-    window.addEventListener('click', self.__windowListener);
-    el.addEventListener('click', self.__elementListener);
+    setTimeout(function() {
+      window.addEventListener('click', self.__windowListener);
+      el.addEventListener('click', self.__elementListener);
+    }, 0);
   }
 
   componentWillUnmount() {
