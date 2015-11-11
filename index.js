@@ -43,7 +43,7 @@ var ClickOutComponent = (function (_React$Component) {
       };
 
       setTimeout(function () {
-        if (this.__unmounted) {
+        if (self.__unmounted) {
           return;
         }
         window.addEventListener('click', self.__windowListener);
