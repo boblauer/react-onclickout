@@ -43,6 +43,7 @@ var ClickOutComponent = (function (_React$Component) {
       };
 
       setTimeout(function () {
+        if (self.__unmounted) return;
         window.addEventListener('click', self.__windowListener);
         el.addEventListener('click', self.__elementListener);
       }, 0);
@@ -52,6 +53,7 @@ var ClickOutComponent = (function (_React$Component) {
     value: function componentWillUnmount() {
       window.removeEventListener('click', this.__windowListener);
       ReactDOM.findDOMNode(this).removeEventListener('click', this.__elementListener);
+      this.__unmounted = true;
     }
   }, {
     key: 'render',
