@@ -31,9 +31,8 @@ class ClickOutComponent extends React.Component {
     };
 
     setTimeout(function() {
-      if (self.__unmounted) {
-        return;
-      }
+      if (self.__unmounted) return;
+
       window.addEventListener('click', self.__windowListener);
       el.addEventListener('click', self.__elementListener);
     }, 0);
