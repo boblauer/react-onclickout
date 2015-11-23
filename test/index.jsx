@@ -2,6 +2,7 @@ var assert          = require('assert')
   , jsdom           = require('jsdom')
   , React           = require('react')
   , ReactDOM        = require('react-dom')
+  , sinon           = require('sinon')
   , ClickOutWrapper = require('../index.js')
   , clickedOutCount = 0
   ;
@@ -13,6 +14,18 @@ function incrementClickedOutCount() {
 describe('ClickOutWrapper', function () {
   var container;
 
+  beforeEach(function() {
+    sinon.stub(global, 'setTimeout', function(cb) {
+      cb();
+    });
+  });
+
+  afterEach(function() {
+    if (setTimeout.restore) {
+      setTimeout.restore();
+    }
+  });
+
   beforeEach(function () {
     clickedOutCount = 0;
     global.document = jsdom.jsdom('<html><body><div id="container"></div></body></html>');
@@ -20,7 +33,7 @@ describe('ClickOutWrapper', function () {
     container = global.document.querySelector('#container');
   });
 
-  it('works as a wrapper component', function(done) {
+  it('works as a wrapper component', function() {
     ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
@@ -29,10 +42,10 @@ describe('ClickOutWrapper', function () {
 
     appendClickOutArea(container);
 
-    testClicks(done);
+    testClicks();
   });
 
-  it('works as a wrapper component with multiple children', function(done) {
+  it('works as a wrapper component with multiple children', function() {
     ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
@@ -42,10 +55,10 @@ describe('ClickOutWrapper', function () {
 
     appendClickOutArea(container);
 
-    testClicks(done);
+    testClicks();
   })
 
-  it('works with multiple instances at once', function(done) {
+  it('works with multiple instances at once', function() {
     ReactDOM.render(
       <div>
         <ClickOutWrapper onClickOut={incrementClickedOutCount}>
@@ -59,7 +72,7 @@ describe('ClickOutWrapper', function () {
 
     appendClickOutArea(container);
 
-    testMultipleInstanceClicks(done);
+    testMultipleInstanceClicks();
   });
 
   it('works when adding the click-out component on click of the page', function(done) {
@@ -90,13 +103,15 @@ describe('ClickOutWrapper', function () {
     }
 
     ReactDOM.render(React.createElement(Component), container);
-    simulateClick(container.querySelector('button'), function() {
+    setTimeout.restore();
+    setTimeout(function() {
+      simulateClick(container.querySelector('button'));
       assert(!hideWasCalled);
       done();
-    });
+    }, 1);
   });
 
-  it('cleans up handlers as a wrapper component', function(done) {
+  it('cleans up handlers as a wrapper component', function() {
     ReactDOM.render(
       <ClickOutWrapper onClickOut={incrementClickedOutCount}>
         <span className='click-in'>Click in!</span>
@@ -111,12 +126,12 @@ describe('ClickOutWrapper', function () {
 
       appendClickOutArea(container);
 
-      testUnmountedClicks(done);
+      testUnmountedClicks();
     });
 
   });
 
-  it('works as a base class', function(done) {
+  it('works as a base class', function() {
     class Component extends ClickOutWrapper {
       onClickOut() {
         incrementClickedOutCount();
@@ -130,10 +145,10 @@ describe('ClickOutWrapper', function () {
     ReactDOM.render(React.createElement(Component), container);
     appendClickOutArea(container);
 
-    testClicks(done);
+    testClicks();
   });
 
-  it('cleans up as a base component', function(done) {
+  it('cleans up as a base component', function() {
     class Component extends ClickOutWrapper {
       onClickOut() {
         incrementClickedOutCount();
@@ -147,63 +162,53 @@ describe('ClickOutWrapper', function () {
     ReactDOM.render(React.createElement(Component), container);
     appendClickOutArea(container);
 
-    testClicks(function() {
-      var unmounted = ReactDOM.unmountComponentAtNode(container);
-      assert.equal(unmounted, true);
+    testClicks();
+    var unmounted = ReactDOM.unmountComponentAtNode(container);
+    assert.equal(unmounted, true);
 
-      appendClickOutArea(container);
+    appendClickOutArea(container);
 
-      testUnmountedClicks(done);
-    });
+    testUnmountedClicks();
   });
 });
 
-function testClicks(done) {
+function testClicks() {
   var clickIn   = document.querySelector('.click-in')
     , clickOut  = document.querySelector('.click-out')
     , prevCount = clickedOutCount
     ;
 
-  simulateClick(clickIn, function() {
-    assert.equal(clickedOutCount, prevCount);
+  simulateClick(clickIn);
+  assert.equal(clickedOutCount, prevCount);
 
-    simulateClick(clickOut, function() {
-      assert.equal(clickedOutCount, prevCount + 1);
-      done();
-    });
-  });
+  simulateClick(clickOut);
+  assert.equal(clickedOutCount, prevCount + 1);
 }
 
-function testMultipleInstanceClicks(done) {
+function testMultipleInstanceClicks() {
   var clickIn1  = document.querySelector('.click-in')
     , clickIn2  = document.querySelector('.click-in-2')
     , clickOut  = document.querySelector('.click-out')
     , prevCount = clickedOutCount
     ;
 
-  simulateClick(clickIn1, function() {
-    assert.equal(clickedOutCount, prevCount + 1);
+  simulateClick(clickIn1);
+  assert.equal(clickedOutCount, prevCount + 1);
 
-    simulateClick(clickIn2, function() {
-      assert.equal(clickedOutCount, prevCount + 2);
+  simulateClick(clickIn2);
+  assert.equal(clickedOutCount, prevCount + 2);
 
-      simulateClick(clickOut, function() {
-        assert.equal(clickedOutCount, prevCount + 4);
-        done();
-      });
-    });
-  });
+  simulateClick(clickOut);
+  assert.equal(clickedOutCount, prevCount + 4);
 }
 
-function testUnmountedClicks(done) {
+function testUnmountedClicks() {
   var clickOut  = document.querySelector('.click-out')
     , prevCount = clickedOutCount
     ;
 
-  simulateClick(clickOut, function() {
-    assert.equal(clickedOutCount, prevCount);
-    done();
-  });
+  simulateClick(clickOut);
+  assert.equal(clickedOutCount, prevCount);
 }
 
 function appendClickOutArea(parent) {
@@ -213,11 +218,8 @@ function appendClickOutArea(parent) {
   parent.appendChild(span);
 }
 
-function simulateClick(el, cb) {
-  setTimeout(function() {
-    var clickEvent = document.createEvent('MouseEvents');
-    clickEvent.initEvent('click', true, true);
-    el.dispatchEvent(clickEvent);
-    cb();
-  }, 0);
+function simulateClick(el) {
+  var clickEvent = document.createEvent('MouseEvents');
+  clickEvent.initEvent('click', true, true);
+  el.dispatchEvent(clickEvent);
 }
