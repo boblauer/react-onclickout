@@ -1,6 +1,6 @@
 {
   "name": "react-onclickout",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "An ES6-friendly on-click-outside React component.",
   "main": "index.js",
   "scripts": {
