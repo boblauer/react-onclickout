@@ -12,11 +12,10 @@ class ClickOutComponent extends React.Component {
   componentDidMount() {
     let self    = this
       , el      = ReactDOM.findDOMNode(this)
-      , reactId = el.getAttribute('data-reactid')
       ;
 
     self.__windowListener = function(e) {
-      if (e.__clickInElReactId === reactId) return;
+      if (e.__clickedElement === el) return;
 
       var clickOutHandler = self.onClickOut || self.props.onClickOut;
       if (!clickOutHandler) {
@@ -27,7 +26,7 @@ class ClickOutComponent extends React.Component {
     };
 
     self.__elementListener = function(e) {
-      e.__clickInElReactId = reactId;
+      e.__clickedElement = el;
     };
 
     setTimeout(function() {
