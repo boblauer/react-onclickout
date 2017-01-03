@@ -25,13 +25,15 @@
   },
   "homepage": "https://github.com/boblauer/react-onclickout#readme",
   "peerDependencies": {
-    "react": ">=0.14",
-    "react-dom": ">=0.14"
+    "react": "^15.x",
+    "react-dom": "^15.x"
   },
   "devDependencies": {
     "babel": "^5.8.20",
     "jsdom": "^3.1.2",
     "mocha": "^2.2.5",
+    "react": "^15.x",
+    "react-dom": "^15.x",
     "sinon": "^1.17.2"
   }
 }
