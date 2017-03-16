@@ -10,14 +10,13 @@ class ClickOutComponent extends React.Component {
   }
 
   componentDidMount() {
-    let self    = this
-      , el      = ReactDOM.findDOMNode(this)
-      ;
+    let self = this;
+    let el = ReactDOM.findDOMNode(this);
 
     self.__windowListener = function(e) {
-      if (e.__clickedElement === el) return;
+      if ((e.__clickedElements || []).indexOf(el) !== -1) return;
 
-      var clickOutHandler = self.onClickOut || self.props.onClickOut;
+      let clickOutHandler = self.onClickOut || self.props.onClickOut;
       if (!clickOutHandler) {
         return console.warn('onClickOut is not defined.');
       }
@@ -26,7 +25,8 @@ class ClickOutComponent extends React.Component {
     };
 
     self.__elementListener = function(e) {
-      e.__clickedElement = el;
+      e.__clickedElements = e.__clickedElements || [];
+      e.__clickedElements.push(el);
     };
 
     setTimeout(function() {

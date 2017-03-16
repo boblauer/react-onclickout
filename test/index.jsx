@@ -7,8 +7,9 @@ var assert          = require('assert')
   , clickedOutCount = 0
   ;
 
-function incrementClickedOutCount() {
-  clickedOutCount++;
+function incrementClickedOutCount(count) {
+  if (typeof count !== 'number') count = 1;
+  clickedOutCount += count;
 }
 
 describe('ClickOutWrapper', function () {
@@ -128,7 +129,6 @@ describe('ClickOutWrapper', function () {
 
       testUnmountedClicks();
     });
-
   });
 
   it('works as a base class', function() {
@@ -147,6 +147,30 @@ describe('ClickOutWrapper', function () {
 
     testClicks();
   });
+
+  it('does not fire a click on itself when it is nested inside another click-out component', function() {
+    ReactDOM.render(
+      <div>
+        <ClickOutWrapper onClickOut={incrementClickedOutCount}>
+          <div className='outer-click-area'>Click in!</div>
+          <ClickOutWrapper onClickOut={incrementClickedOutCount.bind(null, 2)}>
+            <span className='inner-click-area'>Click in!</span>
+          </ClickOutWrapper>
+        </ClickOutWrapper>
+      </div>, container
+    );
+
+    var outerClickArea = document.querySelector('.outer-click-area')
+      , innerClickArea = document.querySelector('.inner-click-area')
+      , prevCount = clickedOutCount
+      ;
+
+    simulateClick(outerClickArea);
+    assert.equal(clickedOutCount, prevCount + 2);
+
+    simulateClick(innerClickArea);
+    assert.equal(clickedOutCount, prevCount + 2);
+  })
 
   it('cleans up as a base component', function() {
     class Component extends ClickOutWrapper {
