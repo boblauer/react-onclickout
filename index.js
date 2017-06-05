@@ -24,9 +24,25 @@ var ClickOutComponent = (function (_React$Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       var self = this;
+      var elTouchIsClick = true;
+      var documentTouchIsClick = true;
       var el = ReactDOM.findDOMNode(this);
 
-      self.__windowListener = function (e) {
+      self.__documentTouchStarted = function (e) {
+        el.removeEventListener('click', self.__elementClicked);
+        document.removeEventListener('click', self.__documentClicked);
+      };
+
+      self.__documentTouchMoved = function (e) {
+        documentTouchIsClick = false;
+      };
+
+      self.__documentTouchEnded = function (e) {
+        if (documentTouchIsClick) self.__documentClicked(e);
+        documentTouchIsClick = true;
+      };
+
+      self.__documentClicked = function (e) {
         if ((e.__clickedElements || []).indexOf(el) !== -1) return;
 
         var clickOutHandler = self.onClickOut || self.props.onClickOut;
@@ -37,22 +53,43 @@ var ClickOutComponent = (function (_React$Component) {
         clickOutHandler.call(self, e);
       };
 
-      self.__elementListener = function (e) {
+      self.__elementTouchMoved = function (e) {
+        elTouchIsClick = false;
+      };
+
+      self.__elementTouchEnded = function (e) {
+        if (elTouchIsClick) self.__elementClicked(e);
+        elTouchIsClick = true;
+      };
+
+      self.__elementClicked = function (e) {
         e.__clickedElements = e.__clickedElements || [];
         e.__clickedElements.push(el);
       };
 
       setTimeout(function () {
         if (self.__unmounted) return;
-        window.addEventListener('click', self.__windowListener);
-        el.addEventListener('click', self.__elementListener);
+        self.toggleListeners('addEventListener');
       }, 0);
+    }
+  }, {
+    key: 'toggleListeners',
+    value: function toggleListeners(listenerMethod) {
+      var el = ReactDOM.findDOMNode(this);
+
+      el[listenerMethod]('touchmove', this.__elementTouchMoved);
+      el[listenerMethod]('touchend', this.__elementTouchEnded);
+      el[listenerMethod]('click', this.__elementClicked);
+
+      document[listenerMethod]('touchstart', this.__documentTouchStarted);
+      document[listenerMethod]('touchmove', this.__documentTouchMoved);
+      document[listenerMethod]('touchend', this.__documentTouchEnded);
+      document[listenerMethod]('click', this.__documentClicked);
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      window.removeEventListener('click', this.__windowListener);
-      ReactDOM.findDOMNode(this).removeEventListener('click', this.__elementListener);
+      this.toggleListeners('removeEventListener');
       this.__unmounted = true;
     }
   }, {

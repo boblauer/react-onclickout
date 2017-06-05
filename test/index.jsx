@@ -12,6 +12,10 @@ function incrementClickedOutCount(count) {
   clickedOutCount += count;
 }
 
+beforeEach(() => {
+  clickedOutCount = 0;
+});
+
 describe('ClickOutWrapper', function () {
   var container;
 
@@ -194,6 +198,30 @@ describe('ClickOutWrapper', function () {
 
     testUnmountedClicks();
   });
+
+  it('works when a touchstart and touchend have been fired without a touchmove inbetween', function() {
+    ReactDOM.render(
+      <ClickOutWrapper onClickOut={incrementClickedOutCount}>
+        <span className='click-in'>Click in!</span>
+      </ClickOutWrapper>, container
+    );
+
+    appendClickOutArea(container);
+
+    testValidTouches();
+  });
+
+  it('does not register a click when a touchdrag event is fired inbetween touchstart and touchend', function() {
+    ReactDOM.render(
+      <ClickOutWrapper onClickOut={incrementClickedOutCount}>
+        <span className='click-in'>Click in!</span>
+      </ClickOutWrapper>, container
+    );
+
+    appendClickOutArea(container);
+
+    testInvalidTouches();
+  });
 });
 
 function testClicks() {
@@ -207,6 +235,37 @@ function testClicks() {
 
   simulateClick(clickOut);
   assert.equal(clickedOutCount, prevCount + 1);
+}
+
+function testValidTouches() {
+  var clickIn   = document.querySelector('.click-in')
+    , clickOut  = document.querySelector('.click-out')
+    ;
+
+  simulateTouchEvent(clickIn, 'touchstart');
+  simulateTouchEvent(clickIn, 'touchend');
+  assert.equal(clickedOutCount, 0);
+
+  simulateTouchEvent(clickOut, 'touchstart');
+  simulateTouchEvent(clickOut, 'touchend');
+  assert.equal(clickedOutCount, 1);
+}
+
+function testInvalidTouches() {
+  var clickIn   = document.querySelector('.click-in')
+    , clickOut  = document.querySelector('.click-out')
+    , prevCount = clickedOutCount
+    ;
+
+  simulateTouchEvent(clickIn, 'touchstart');
+  simulateTouchEvent(clickIn, 'touchmove');
+  simulateTouchEvent(clickIn, 'touchend');
+  assert.equal(clickedOutCount, 0);
+
+  simulateTouchEvent(clickOut, 'touchstart');
+  simulateTouchEvent(clickOut, 'touchmove');
+  simulateTouchEvent(clickOut, 'touchend');
+  assert.equal(clickedOutCount, 0);
 }
 
 function testMultipleInstanceClicks() {
@@ -246,4 +305,10 @@ function simulateClick(el) {
   var clickEvent = document.createEvent('MouseEvents');
   clickEvent.initEvent('click', true, true);
   el.dispatchEvent(clickEvent);
+}
+
+function simulateTouchEvent(el, eventType) {
+  var touchEvent = document.createEvent('TouchEvent');
+  touchEvent.initEvent(eventType, true, true);
+  el.dispatchEvent(touchEvent);
 }
