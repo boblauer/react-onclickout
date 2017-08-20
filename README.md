@@ -58,4 +58,10 @@ class ExampleComponent extends ClickOutComponent {
 }
 ```
 
+### As a way to fix not supported onBlur on iOS, Safari and Firefox navigators
+
+onBlur isn't supported in all navigators, this component is a way to fix this issue, both on touch screens and desktops.
+
+
+
 That's pretty much it.  Pull requests are more than welcome!
