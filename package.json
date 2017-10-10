@@ -4,7 +4,7 @@
   "description": "An ES6-friendly on-click-outside React component.",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel src/index.jsx --out-file index.js",
+    "build": "babel src/index.jsx --out-file index.js",
     "test": "npm run build && mocha --compilers .jsx:test/compiler.js test/*.jsx",
     "prepublish": "npm run build"
   },
@@ -29,7 +29,10 @@
     "react-dom": "^15.x || ^16.x"
   },
   "devDependencies": {
-    "babel": "^5.8.20",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
     "jsdom": "^11.3.0",
     "mocha": "^2.2.5",
     "react": "^16.x",
