@@ -21,7 +21,7 @@ There are two ways to use this component.
 ### As a wrapper component
 
 ```jsx
-let ClickOutHandler = require('react-onclickout');
+const ClickOutHandler = require('react-onclickout');
 
 class ExampleComponent extends React.Component {
 
@@ -42,7 +42,7 @@ class ExampleComponent extends React.Component {
 ### As a base component
 
 ```jsx
-let ClickOutComponent = require('react-onclickout');
+const ClickOutComponent = require('react-onclickout');
 
 class ExampleComponent extends ClickOutComponent {
 
@@ -53,6 +53,30 @@ class ExampleComponent extends ClickOutComponent {
   render() {
     return (
       <div>Click outside of me!</div>
+    );
+  }
+}
+```
+
+## Ignoring Elements
+
+There are times when you may want to ignore certain elements that were clicked outside of the target component.  You can handle such a scenario by inspecting the event passed to your `onClickOut` method handler.
+
+```jsx
+const ClickOutHandler = require('react-onclickout');
+
+class ExampleComponent extends React.Component {
+
+  onClickOut(e) {
+    if (hasClass(e.target, 'ignore-me')) return;
+    alert('user clicked outside of the component!');
+  }
+
+  render() {
+    return (
+      <ClickOutHandler onClickOut={this.onClickOut}>
+        <div>Click outside of me!</div>
+      </ClickOutHandler>
     );
   }
 }
