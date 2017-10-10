@@ -7,6 +7,8 @@ var assert          = require('assert')
   , clickedOutCount = 0
   ;
 
+var JSDOM = jsdom.JSDOM;
+
 function incrementClickedOutCount(count) {
   if (typeof count !== 'number') count = 1;
   clickedOutCount += count;
@@ -33,8 +35,9 @@ describe('ClickOutWrapper', function () {
 
   beforeEach(function () {
     clickedOutCount = 0;
-    global.document = jsdom.jsdom('<html><body><div id="container"></div></body></html>');
-    global.window = document.parentWindow;
+    var dom = new JSDOM('<html><body><div id="container"></div></body></html>');
+    global.document = dom.window.document;
+    global.window = dom.window;
     container = global.document.querySelector('#container');
   });
 
